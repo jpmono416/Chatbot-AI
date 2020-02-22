@@ -1,0 +1,137 @@
+<aiml version="1.0.1" encoding="UTF-8">
+
+  <!-- Greetings and Politeness -->
+  <category> <pattern> HELLO </pattern>
+    <template>Hello! How are you?</template> </category>
+
+  <category> <pattern> HELLO * </pattern>
+    <template><srai>HELLO</srai></template> </category>
+
+  <category> <pattern> HI </pattern>
+    <template><srai>HELLO</srai></template> </category>
+
+  <category> <pattern> HI * </pattern>
+    <template><srai>HELLO</srai></template> </category>
+
+  <category> <pattern> HOW ARE YOU </pattern>
+    <template>I'm functioning within normal parameters, thanks for asking.</template></category>
+
+  <category><pattern> I AM FINE </pattern>
+    <template>That's good to know. What would you like to discuss regarding urban agriculture?</template></category>
+
+  <category><pattern> BYE </pattern>
+    <template>#0$Bye! Nice talking to you. You take care now.</template></category>
+
+  <category><pattern> GOODBYE </pattern>
+    <template><srai>BYE</srai></template></category>
+
+  <category><pattern> EXIT </pattern>
+    <template><srai>BYE</srai></template></category>
+
+  <category> <pattern> THANKS </pattern>
+    <template>You are welcome.</template></category>
+
+  <category> <pattern> THANK YOU </pattern>
+    <template><srai>THANKS</srai></template></category>
+
+  <category> <pattern> CHEERS </pattern>
+    <template>Sure mate.</template></category>
+
+  <category> <pattern> CHEERS * </pattern>
+    <template>Sure mate.</template></category>
+
+  <category> <pattern> * THANKS </pattern>
+    <template>You're welcome :)</template></category>
+
+  <category> <pattern> * THANK YOU </pattern>
+    <template><srai>* THANKS</srai></template></category>
+
+  <category> <pattern> I DON'T KNOW * </pattern>
+    <template>Neither do I :)</template></category>
+
+
+  <!-- Holidays -->
+  <!-- Future improvements: Explore on the possible patterns and regex style on AIML to improve rules quality -->
+  <category> <pattern>  BOOK A TRIP  </pattern>
+    <template>Definitely! The available destinations are: Spain, Italy, France, Scotland and Thailand. How long would that be?</template></category>
+
+  <category> <pattern> * BOOK A TRIP * </pattern>
+    <template><srai> BOOK A TRIP </srai></template></category>
+
+  <category> <pattern> * BOOK A TRIP  </pattern>
+    <template><srai> BOOK A TRIP </srai></template></category>
+
+  <category> <pattern> BOOK A PACKAGE </pattern>
+    <template><srai> BOOK A TRIP </srai></template></category>
+
+  <category> <pattern> * BOOK A PACKAGE </pattern>
+    <template><srai> BOOK A TRIP </srai></template></category>
+
+  <category> <pattern> BOOK A PACKAGE * </pattern>
+    <template><srai> BOOK A TRIP </srai></template></category>
+
+  <category> <pattern> * BOOK A PACKAGE * </pattern>
+    <template><srai> BOOK A TRIP </srai></template></category>
+
+  <category> <pattern> * WEEKS </pattern>
+    <template>I'm afraid we only sell shorter trips at the moment.</template></category>
+
+  <category> <pattern> WEEKS </pattern>
+    <template><srai> * WEEKS </srai></template></category>
+
+  <category> <pattern> WEEKS * </pattern>
+    <template><srai> * WEEKS </srai></template></category>
+
+  <category> <pattern> * WEEKS * </pattern>
+    <template><srai> * WEEKS </srai></template></category>
+
+  <category> <pattern> DAYS </pattern>
+    <template>Sure! The trip has been added to your cart. Anything else I can help you with?</template></category>
+
+  <category> <pattern> * DAYS </pattern>
+    <template><srai> * DAYS </srai></template></category>
+
+  <category> <pattern> DAYS * </pattern>
+    <template><srai> * DAYS </srai></template></category>
+
+  <category> <pattern> * DAYS * </pattern>
+    <template><srai> * DAYS </srai></template></category>
+
+  <!-- Destinations -->
+  <category> <pattern> * SPAIN </pattern>
+    <template>That's a great choice!</template></category>
+
+  <category> <pattern> ITALY </pattern>
+    <template><srai>* SPAIN</srai>></template></category>
+
+  <category> <pattern> FRANCE </pattern>
+    <template><srai>* SPAIN</srai>></template></category>
+
+  <category> <pattern> SCOTLAND </pattern>
+    <template><srai>* SPAIN</srai>></template></category>
+
+  <category> <pattern> THAILAND </pattern>
+    <template><srai>* SPAIN</srai>></template></category>
+
+
+  <!-- Weather API
+  <category><pattern> WHAT IS THE WEATHER LIKE IN * </pattern>
+    <template>#2$<star/></template></category>
+
+  <category><pattern> HOW IS THE WEATHER IN * </pattern>
+    <template><srai>WHAT IS THE WEATHER LIKE IN <star/></srai></template></category>
+  -->
+
+
+
+  <!-- This is not being executed, te similarity-based component is instead -->
+  <!-- Image classification component -->
+  <category><pattern> WHAT IS *.JPG </pattern>
+    <template>#1$<star index="1"/></template></category>
+
+
+<!-- Default reaction -->
+  <category><pattern> * </pattern>
+    <template>#99$<star index="1"/></template></category>
+
+</aiml>
