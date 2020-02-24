@@ -1,36 +1,17 @@
 ﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Basic chatbot design --- for your own modifications
-"""
-#######################################################
-# Initialise Wikipedia agent
-#######################################################
-"""
-
-# THIS IS THROWING ME ERRORS, MAYBE NAME IS WRONG?
-
-import wikipediaapi
-wiki_wiki = wikipediaapi.Wikipedia('en')
-wikipediaapi.log.setLevel(level=wikipediaapi.logging.ERROR)
-
-#######################################################
-# Initialise weather agent
-#######################################################
-import json, requests
-APIkey = "" #insert your personal OpenWeathermap API key here if you have one, and want to use this feature
-"""
-
-#######################################################
-#  Initialise AIML agent
-#######################################################
+from IPython.utils.py3compat import execfile
 from sklearn.feature_extraction.text import TfidfVectorizer
 import aiml
+import nltk
 import pandas as pd
 import numpy as np
 import operator ,os
 import sys
 
+#######################################################
+#  Initialise AIML agent
+#######################################################
 # Create a Kernel object. No string encoding (all I/O is unicode)
 kern = aiml.Kernel()
 kern.setTextEncoding(None)
@@ -58,6 +39,23 @@ print("Welcome to the holidays chat bot. You can use me to book holiday packages
 # before finishing the booking process
 
 
+V = """ 
+Eiffel_Tower => {}
+Retiro_Gardens => {}
+Tower_of_Pisa => {}
+Roman_Colosseum => {}
+Champs_Elysees => {}
+Alhambra => {}
+Ramblas => {}
+be_in => {}
+Spain => ES
+Italy => IT
+France => FR
+"""
+
+folval = nltk.Valuation.fromstring(V)
+grammar_file = 'simple-sem.fcfg'
+objectCounter = 0
 
 AIML = 'aiml'
 while True:
@@ -84,6 +82,59 @@ while True:
             os.subprocess.call(['train.py', "--dataset=" + params[1]])
             break;
 
+        # is x in y ?
+        elif cmd == 4:
+            g = nltk.Assignment(folval.domain)
+            mod = nltk.Model(folval.domain, folval)
+            sent = 'some ' + params[1] + ' are_in  ' + params[2]
+            results = nltk.evaluate_sents([sent], grammar_file,mod,g)[0][0]
+            if results[2] == True:
+                print("Yes.")
+            else:
+                print("No.")
+
+        # x is in y
+        elif cmd == 5:
+            obj = 'obj' + str(objectCounter)
+            objectCounter +=1
+
+            folval['obj' + obj] = obj # insert constant
+            # folval[params[1]] = params[0] + params[1]
+
+            if len(folval[params[1]]) == 1:
+                if('',) in folval[params[1]]:
+                    folval[params[1]].clear()
+                folval[params[1]].add((obj,)) # insert info
+                print("Added?")
+                if len(folval["be_in"]) == 1:
+                    if('',) in folval["be_in"]:
+                        folval["be_in"].clear()
+
+                folval["be_in"].add((obj,folval[params[2]])) # insert location
+                print("Think so")
+
+        # Which in country
+        elif cmd == 6:
+            g = nltk.Assignment(folval.domain)
+            mod = nltk.Model(folval.domain, folval)
+            exp = nltk.Expression.fromstring(("be_in(x," + params[1] + ")"))
+            sat = mod.satisfiers(exp, "x", g)
+            if len(sat) == 0:
+                print("None")
+            else:
+                # find satisfying objects in the dict
+                # and print their typenames
+                sol = folval.values()
+                for so in sat :
+                    for k, v in folval.items() :
+                        if len(v) > 0 :
+                            vl = list(v)
+                            if len(vl[0]) == 1:
+                                for i in vl:
+                                    if i[0] == so:
+                                        print(k)
+                                        break
+
         elif cmd == 99:
             query = userInput
             vectorizer = TfidfVectorizer(min_df=0, ngram_range=(2, 4), strip_accents='unicode', norm='l2',
@@ -100,34 +151,3 @@ while True:
                 print(answers_list[sorted_dict_sim[0][0]])
     else:
         print(answer)
-
-
-        """
-        
-                elif cmd == 1:
-            wpage = wiki_wiki.page(params[1])
-            if wpage.exists():
-                print(wpage.summary)
-                print("Learn more at", wpage.canonicalurl)
-            else:
-                print("Sorry, I don't know what that is.")
-        elif cmd == 2:
-            succeeded = False
-            api_url = r"http://api.openweathermap.org/data/2.5/weather?q="
-            response = requests.get(api_url + params[1] + r"&units=metric&APPID="+APIkey)
-            if response.status_code == 200:
-                response_json = json.loads(response.content)
-                if response_json:
-                    t = response_json['main']['temp']
-                    tmi = response_json['main']['temp_min']
-                    tma = response_json['main']['temp_max']
-                    hum = response_json['main']['humidity']
-                    wsp = response_json['wind']['speed']
-                    wdir = response_json['wind']['deg']
-                    conditions = response_json['weather'][0]['description']
-                    print("The temperature is", t, "°C, varying between", tmi, "and", tma, "at the moment, humidity is", hum, "%, wind speed ", wsp, "m/s,", conditions)
-                    succeeded = True
-            if not succeeded:
-                print("Sorry, I could not resolve the location you gave me.")
-                
-        """
